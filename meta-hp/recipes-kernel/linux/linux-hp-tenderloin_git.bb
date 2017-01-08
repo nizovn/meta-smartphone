@@ -25,18 +25,17 @@ def get_kernelversion_modules(p):
     for fn in os.listdir(p):
         if os.path.isfile(p+fn):
             try:
-                f = open(p+fn, 'r')
+                f = open(p+fn, 'rb')
             except IOError:
                 return None
 
-            l = f.readlines()
+            l = f.read()
             f.close()
 
-            r = re.compile("vermagic=(\S*)")
-            for s in l:
-                m = r.search(s)
-                if m:
-                    return m.group(1)
+            r = re.compile(b"vermagic=(\S*)")
+            m = r.search(l)
+            if m:
+                return m.group(1).decode("ascii")
     return None
 
 # This is the version we get from the kernel tree: <kernel version>-<commits since last
